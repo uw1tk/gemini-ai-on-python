@@ -8,6 +8,7 @@ _**Kullanım:**_
 
 Bu projede aynı zamanda **oyun** (ve ya/ya da uygulama) da açabilmektesiniz. **_Oyun Aç_** girdisi ile programı oyun açma fonksiyonuna sokabilirsiniz.
 
+
 `generation_config` kodundaki;
 temperature: Bu değer metnin yaratıcılığını kontrol eder. 0 değeri en az yaratıcı, 1 değeri ise en yaratıcı metni üretir.
 
@@ -16,6 +17,7 @@ top_p: Bu değer modelin en olası kelimeleri seçme eğilimini belirler. 0 değ
 top_k: Bu değer modelin her adımda dikkate aldığı olası kelimelerin sayısını belirler. Düşük değerler daha özgün ve beklenmedik metinler, yüksek değerler ise daha tutarlı ve akıcı metinler üretme eğilimindedir. 
 
 max_output_tokens: Bu değer modelin üretebileceği maksimum kelime sayısını belirler.
+
 
 Uygulama ve oyun açtırmak için önceden bir isim ve dosya yolu tanımlamanız gerekmektedir. `oyunlar` adı altında oluşturduğum kütüphanede örnek kullanım ve açıklamasına yer verdim.
 
