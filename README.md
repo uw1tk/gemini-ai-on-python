@@ -22,3 +22,4 @@ max_output_tokens: Bu değer modelin üretebileceği maksimum kelime sayısını
 Uygulama ve oyun açtırmak için önceden bir isim ve dosya yolu tanımlamanız gerekmektedir. `oyunlar` adı altında oluşturduğum kütüphanede örnek kullanım ve açıklamasına yer verdim.
 
 _Not: Güvenlik ayarlarına uymayan bir girdi girdiğinizde (cinsellik, şiddet içeren bir metin gibi) program hata vererek kendini kapatmaktadır. Eğer bir çözümünüz varsa ulaşabilirsiniz._
+_Not2: Oyun/Uygulama açtırdıktan sonra. Gemini AI da Oyun aç girdisi almış gibi davranıp cevap üretmektedir. Bu bug henüz çözülmemiştir._
