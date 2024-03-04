@@ -5,9 +5,7 @@ from datetime import timedelta
 import time
 import os
 
-genai.configure(api_key="Api")
-#AIstudio üzerinden aldığınız API key'ini buraya yapıştırın.
-
+genai.configure(api_key="AIzaSyAZqTIzoPeopV1iunJQqCXI3tEB9Kdl1IA")
 
 generation_config = {
   "temperature": 0.8,
@@ -15,10 +13,6 @@ generation_config = {
   "top_k": 5,
   "max_output_tokens": 2048,
 }
-#temperature: Bu değer metnin yaratıcılığını kontrol eder. 0 değeri en az yaratıcı, 1 değeri ise en yaratıcı metni üretir.
-#top_p: Bu değer modelin en olası kelimeleri seçme eğilimini belirler. 0 değeri en rastgele, 1 değeri ise en olası kelimeleri seçer.
-#top_k: Bu değer modelin her adımda dikkate aldığı olası kelimelerin sayısını belirler. Düşük değerler daha özgün ve beklenmedik metinler, yüksek değerler ise daha tutarlı ve akıcı metinler üretme eğilimindedir. 
-#max_output_tokens: Bu değer modelin üretebileceği maksimum kelime sayısını belirler.
 
 safety_settings = [
   {
@@ -42,26 +36,34 @@ safety_settings = [
 model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                               generation_config=generation_config,
                               safety_settings=safety_settings)
-#Güvenlik ayarları  
 
-     
+oyunlar = {
+    "Valorant": os.path.join("C:", "ProgramData", "Microsoft",  "Windows", "Start Menu", "Programs", "Riot Games", "Valorant.lnk"),
+    "LOL": os.path.join("C:", "ProgramData", "Microsoft",  "Windows", "Start Menu", "Programs", "Riot Games", "League of Legends.lnk"),
+    "Apex": os.path.join("C:", "Program Files", "EA Games", "Apex", "r5apex.exe"),
+    "CS": os.path.join("C:", "Users", "Lenova", "AppData", "Roaming", "Microsoft", "Windows", "Start Menu", "Programs", "Steam", "Counter-Strike 2.url"),
+    "kek": "com.epicgames.launcher://apps/879b0d8776ab46a59a129983ba78f0ce%3A7d690c122fde4c60bed85405f343ad10%3A4,1869934302e4b8cafac2d3c0e7c293d?action=launch&silent=true",
+    "TMP": os.path.join("C:", "Users", "Lenova", "AppData", "Local", "TruckersMP", "TruckersMP-Launcher.exe"),
+    "ETS2": os.path.join("C:", "Users", "Lenova", "Desktop", "Games", "Euro Truck Simulator 2.url"),
+    "WT": os.path.join("C:", "Users", "Lenova", "Desktop", "Games", "War Thunder.url"),
+}
+                 
 convo = model.start_chat(history=[
 ])
 messages = []
-print("Gemini: " + Fore.YELLOW + "Merhaba ben Gemini. Sana Nasıl yardımcı olabilirim kullanıcı?" + Fore.RESET)
-#AI kullanıcıyı selamlar.
+print("Alicia: " + Fore.YELLOW + "Merhaba ben Alicia. Sana Nasıl yardımcı olabilirim Ümit?" + Fore.RESET)
 
 def oyun_ac(oyun_adi):
-  oyunlar = {
-    "Valorant": os.path.join("C:", "ProgramData", "Microsoft",  "Windows", "Start Menu", "Programs", "Riot Games", "Valorant.lnk"),
-    #Bunu yol örneğini burada örnek olarak bıraktım. unicode escape hatası almamak için dosya yollarınızı bu şekilde yazın.
-}
   if oyun_adi in oyunlar:
+      try:
         os.startfile(oyunlar[oyun_adi])
-        print(f"Gemini: {Fore.YELLOW}{oyun_adi} oyunu açılıyor...{Fore.RESET}")
+        print(f"Alicia: {Fore.YELLOW}{oyun_adi} oyunu açılıyor...{Fore.RESET}")
+        return
+      except FileNotFoundError:
+        print(f"Alicia: {Fore.RED}{oyun_adi} oyunu bulunamadı. Lütfen oyunun dosya yolunu kontrol edin.{Fore.RESET}")
         return
   else:
-        print(f"Gemini: {Fore.RED}{oyun_adi} oyunu bulunamadı.{Fore.RESET}")
+        print(f"Alicia: {Fore.RED}{oyun_adi} oyunu bulunamadı. Oyunlar listesinde mevcut oyunlardan birini seçin.{Fore.RESET}")
         return
 while True:
     message = input("\nYou: ")
@@ -69,22 +71,23 @@ while True:
         "role": "user",
         "parts": [message],
     })
-#Kullanıcıdan girdi alır ve 'message' olarak tanımlar
     if message == "Oyun aç":
-          oyun_adi = input("Gemini: " + Fore.YELLOW + "Hangi oyunu açmamı istersiniz?\n" + Fore.RESET + "You: ")
+          oyun_adi = input("Alicia: " + Fore.YELLOW + "Hangi oyunu açmamı istersiniz?\n" + Fore.RESET + "You: ")
           oyun_ac(oyun_adi)
-#Eğer girdi 'Oyun aç' ise oyun_ac fonksiyonu dönmeye başlar.
+          response = None
+
     elif message == "q":
-      print("Gemini: " + Fore.YELLOW + "Program Kapanıyor...")
+      print("Alicia: " + Fore.YELLOW + "Program Kapanıyor...")
       duration = timedelta(seconds=3)
       time.sleep(duration.seconds)
       break
-#Eğer girdi 'q' ise Program uyarı verip 3 saniye sonrasında kendini kapatır.
-    response = model.generate_content(messages)
+      
+    else:
+      response = model.generate_content(messages)
 
-    messages.append({
-        "role": "model",
-        "parts": [response.text],
-    })
-    print("\nGemini: " + Fore.YELLOW + response.text + Fore.RESET)
-#Girdi bunlardan hiç biri değilse Gemini AI bir cevap üretir ve ekrana yazdırır.
+      messages.append({
+              "role": "model",
+              "parts": [response.text],
+          })
+
+      print("\nAlicia: " + Fore.YELLOW + response.text + Fore.RESET)
