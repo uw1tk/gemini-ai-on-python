@@ -25,4 +25,4 @@ _Not: Bu proje hazırlanırken çeşitli yapay zeka ve forumlardan yardım alın
 
 _Not2: Güvenlik ayarlarına uymayan bir girdi girdiğinizde (cinsellik, şiddet içeren bir metin gibi) program hata vererek kendini kapatmaktadır. Eğer bir çözümünüz varsa ulaşabilirsiniz._
 
-_Not3: Oyun/Uygulama açtırdıktan sonra Gemini AI da Oyun aç girdisi almış gibi davranıp cevap üretmektedir. Bu bug henüz çözülmemiştir._
+
