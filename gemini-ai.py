@@ -1,12 +1,15 @@
-# -*- coding: utf-8 -*-
-import google.generativeai as genai
-from colorama import Fore, Style
-from datetime import timedelta
-import time
 import os
+import tkinter as tk
+from tkinter import PhotoImage, messagebox, scrolledtext, simpledialog
+from tkinter import simpledialog
+import google.generativeai as genai
+import customtkinter as ctk
 
-genai.configure(api_key="AIzaSyAZqTIzoPeopV1iunJQqCXI3tEB9Kdl1IA")
 
+# API key'i ayarlama
+genai.configure(api_key="API_KEYINIZ")
+
+# Yapay zekanızın output ayarları
 generation_config = {
   "temperature": 0.8,
   "top_p": 1,
@@ -14,6 +17,7 @@ generation_config = {
   "max_output_tokens": 2048,
 }
 
+# Güvenlik seçenekleri
 safety_settings = [
   {
     "category": "HARM_CATEGORY_HARASSMENT",
@@ -33,61 +37,120 @@ safety_settings = [
   },
 ]
 
-model = genai.GenerativeModel(model_name="gemini-1.0-pro",
+model = genai.GenerativeModel(model_name="gemini-1.5-pro-002",
                               generation_config=generation_config,
                               safety_settings=safety_settings)
 
+# Oyunların yolları
 oyunlar = {
-    "Valorant": os.path.join("C:", "ProgramData", "Microsoft",  "Windows", "Start Menu", "Programs", "Riot Games", "Valorant.lnk"),
-    "LOL": os.path.join("C:", "ProgramData", "Microsoft",  "Windows", "Start Menu", "Programs", "Riot Games", "League of Legends.lnk"),
-    "Apex": os.path.join("C:", "Program Files", "EA Games", "Apex", "r5apex.exe"),
-    "CS": os.path.join("C:", "Users", "Lenova", "AppData", "Roaming", "Microsoft", "Windows", "Start Menu", "Programs", "Steam", "Counter-Strike 2.url"),
-    "kek": "com.epicgames.launcher://apps/879b0d8776ab46a59a129983ba78f0ce%3A7d690c122fde4c60bed85405f343ad10%3A4,1869934302e4b8cafac2d3c0e7c293d?action=launch&silent=true",
-    "TMP": os.path.join("C:", "Users", "Lenova", "AppData", "Local", "TruckersMP", "TruckersMP-Launcher.exe"),
-    "ETS2": os.path.join("C:", "Users", "Lenova", "Desktop", "Games", "Euro Truck Simulator 2.url"),
-    "WT": os.path.join("C:", "Users", "Lenova", "Desktop", "Games", "War Thunder.url"),
+    # Örnek
+    "Oyun1": os.path.join("C:", "ProgramData", "Microsoft",  "Windows", "Start Menu", "Programs", "abc games", "Oyun1.exe"),
+
 }
-                 
-convo = model.start_chat(history=[
-])
-messages = []
-print("Alicia: " + Fore.YELLOW + "Merhaba ben Alicia. Sana Nasıl yardımcı olabilirim Ümit?" + Fore.RESET)
-
+# Oyun açma fonksiyonu
 def oyun_ac(oyun_adi):
-  if oyun_adi in oyunlar:
-      try:
-        os.startfile(oyunlar[oyun_adi])
-        print(f"Alicia: {Fore.YELLOW}{oyun_adi} oyunu açılıyor...{Fore.RESET}")
-        return
-      except FileNotFoundError:
-        print(f"Alicia: {Fore.RED}{oyun_adi} oyunu bulunamadı. Lütfen oyunun dosya yolunu kontrol edin.{Fore.RESET}")
-        return
-  else:
-        print(f"Alicia: {Fore.RED}{oyun_adi} oyunu bulunamadı. Oyunlar listesinde mevcut oyunlardan birini seçin.{Fore.RESET}")
-        return
-while True:
-    message = input("\nYou: ")
-    messages.append({
-        "role": "user",
-        "parts": [message],
-    })
-    if message == "Oyun aç":
-          oyun_adi = input("Alicia: " + Fore.YELLOW + "Hangi oyunu açmamı istersiniz?\n" + Fore.RESET + "You: ")
-          oyun_ac(oyun_adi)
-          response = None
-
-    elif message == "q":
-      print("Alicia: " + Fore.YELLOW + "Program Kapanıyor...")
-      duration = timedelta(seconds=3)
-      time.sleep(duration.seconds)
-      break
-      
+    if oyun_adi in oyunlar:
+        try:
+            os.startfile(oyunlar[oyun_adi])
+            append_text(f"Alicia: {oyun_adi} oyunu açılıyor...")
+            display_default_icon()
+            return
+        except FileNotFoundError:
+            append_text(f"Alicia: {oyun_adi} oyunu bulunamadı. Lütfen oyunun dosya yolunu kontrol edin.\n")
+            return
     else:
-      response = model.generate_content(messages)
+        append_text(f"\nAlicia: {oyun_adi} oyunu bulunamadı. Oyunlar listesinde mevcut oyunlardan birini seçin.\n")
+        return
 
-      messages.append({
-              "role": "model",
-              "parts": [response.text],
-          })
 
-      print("\nAlicia: " + Fore.YELLOW + response.text + Fore.RESET)
+def oyun_ac_callback(event):
+    oyun_adi = input_entry.get()
+    input_entry.delete(0, tk.END)
+    append_text(f"You: {oyun_adi}")
+    oyun_ac(oyun_adi)
+    input_entry.unbind("<Return>")
+
+
+def append_text(text):
+    output_text.configure(state=tk.NORMAL)
+    output_text.insert(tk.END, text + "\n")
+    output_text.configure(state=tk.DISABLED)
+    output_text.see(tk.END)
+
+def handle_command():
+    message = input_entry.get()
+    input_entry.delete(0, tk.END)
+    append_text(f"You: {message}")
+    
+    if message == "Oyun aç":
+        oyun_adi = custom_askstring("Oyun Seçimi", "Hangi oyunu açmamı istersin?\n")
+        if oyun_adi:
+            oyun_ac(oyun_adi)
+    elif message == "q":
+        append_text("\nAlicia: Program Kapanıyor...\n")
+        root.after(3000, root.quit)
+    else:
+        response = model.generate_content(message)
+        response_text = response.text  # Yanıt metnini al
+
+        root.after(0, append_text, "\nAlicia: " + response_text + "\n")
+
+
+
+# Arayüz  oluşturma
+root = ctk.CTk()
+root.title(" ") #AI'nıza vereceğiniz isim
+
+
+root.geometry("950x650") # Pencere boyutunu ayarlayın
+# İkon dosyasının yolunu ve formatını kontrol edin
+icon_path = " "  #  .ico dosyasının yolunu belirtin
+if os.path.exists(icon_path):
+    root.iconbitmap(default=icon_path)
+else:
+    print(f"Icon file not found at {icon_path}")
+ctk.set_default_color_theme("dark-blue") 
+ctk.set_appearance_mode("dark")
+
+
+
+# Oyun açmak için açılan soru kutucuğu
+def custom_askstring(title, prompt):
+    dialog = ctk.CTkToplevel(root)
+    dialog.title(title)
+    dialog.geometry("300x150")
+    root.iconbitmap(default=" ") # .ico dosyasının yolunu belirtin
+    label = ctk.CTkLabel(dialog, text=prompt, font=("Helvetica", 14))
+    label.pack(pady=10)
+
+    entry = ctk.CTkEntry(dialog, width=250)
+    entry.pack(pady=5)
+
+    result = []
+
+    def on_submit():
+        result.append(entry.get())
+        dialog.destroy()
+
+    button = ctk.CTkButton(dialog, text="Tamam", command=on_submit)
+    button.pack(pady=10)
+
+    dialog.grab_set()
+    root.wait_window(dialog)
+
+    return result[0] if result else None
+#Çıktı ekranı
+output_text = ctk.CTkTextbox(root, state=tk.DISABLED, width=60, height=20, font=("Helvetica", 16), text_color="white")
+output_text.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
+
+# Giriş satırı
+input_entry = ctk.CTkEntry(root, placeholder_text="Mesajınızı buraya yazın.", width=400, font=("Helvetica", 16))
+input_entry.pack(pady=5)
+
+# Gönder düğmesi
+button = ctk.CTkButton(root, text="Gönder", command=handle_command, text_color="white", font=("Helvetica", 12))
+button.pack(pady=20)
+# Enter tuşuna basıldığında Gönder butonu tetiklenir
+input_entry.bind("<Return>", lambda event: handle_command())
+
+root.mainloop()
