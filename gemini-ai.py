@@ -52,14 +52,14 @@ def oyun_ac(oyun_adi):
     if oyun_adi in oyunlar:
         try:
             os.startfile(oyunlar[oyun_adi])
-            append_text(f"Alicia: {oyun_adi} oyunu açılıyor...")
+            append_text(f"AI_Adınız: {oyun_adi} oyunu açılıyor...")
             display_default_icon()
             return
         except FileNotFoundError:
-            append_text(f"Alicia: {oyun_adi} oyunu bulunamadı. Lütfen oyunun dosya yolunu kontrol edin.\n")
+            append_text(f"AI_Adınız: {oyun_adi} oyunu bulunamadı. Lütfen oyunun dosya yolunu kontrol edin.\n")
             return
     else:
-        append_text(f"\nAlicia: {oyun_adi} oyunu bulunamadı. Oyunlar listesinde mevcut oyunlardan birini seçin.\n")
+        append_text(f"\nAI_Adınız: {oyun_adi} oyunu bulunamadı. Oyunlar listesinde mevcut oyunlardan birini seçin.\n")
         return
 
 
@@ -87,13 +87,13 @@ def handle_command():
         if oyun_adi:
             oyun_ac(oyun_adi)
     elif message == "q":
-        append_text("\nAlicia: Program Kapanıyor...\n")
+        append_text("\nAI_Adınız: Program Kapanıyor...\n")
         root.after(3000, root.quit)
     else:
         response = model.generate_content(message)
         response_text = response.text  # Yanıt metnini al
 
-        root.after(0, append_text, "\nAlicia: " + response_text + "\n")
+        root.after(0, append_text, "\nAI_Adınız: " + response_text + "\n")
 
 
 
