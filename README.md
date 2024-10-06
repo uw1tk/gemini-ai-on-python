@@ -1,7 +1,7 @@
 Kendi arayüzü üzerinde çalışan yapay zeka uygulaması örneği.
 
 # gemini-ai-on-python
-Bu proje Python 3.12.2 sürümü ile hazırlanmıştır. Gemini AI'yı ([https://gemini.google.com/app](url)) kullanmak için öncelikle [https://aistudio.google.com/app/apikey](url) sitesinden API Key almanız gerekmektedir. **Bunun için herhangi bir ödeme yapmanıza gerek yok.**
+Bu proje Python 3.12.7 sürümü ile hazırlanmıştır. Gemini AI'yı ([https://gemini.google.com/app](url)) kullanmak için öncelikle [https://aistudio.google.com/app/apikey](url) sitesinden API Key almanız gerekmektedir. **Bunun için herhangi bir ödeme yapmanıza gerek yok.**
 
 Yapay zekadan yanıt almak için **Komut istemi (CMD) üzerinden `google.generativeai` kütüphanesini yüklemeniz gerekmektedir**. 
 
